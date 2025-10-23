@@ -688,58 +688,242 @@
             }
             
             function renderNewsPage() {
-                 return `
-                <div class="bg-white">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                         <div class="text-center mb-10">
-                            <h1 class="text-4xl text-gray-900 font-semibold">Berita & Wawasan</h1>
-                            <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">Ikuti perkembangan terbaru dalam teknologi industri, inovasi keberlanjutan, dan berita perusahaan.</p>
-                        </div>
-                        
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        ${[DB.news.featured, ...DB.news.articles].map(article => `
-                             <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col group cursor-pointer" data-navigate="blog-detail" data-id="${article.id}">
-                                 <div class="p-4"><img src="${article.image}" alt="${getTranslated(article, 'title')}" class="w-full h-48 object-cover rounded-lg" onerror="imageFallback(this)"/></div>
-                                 <div class="p-4 pt-0 flex-grow flex flex-col">
-                                     <span class="inline-block px-2 py-1 text-xs text-green-700 bg-green-100 rounded-full mb-3 self-start">${getTranslated(article, 'category')}</span>
-                                     <h3 class="text-lg text-gray-900 mb-3 flex-grow font-medium group-hover:text-purple-600">${getTranslated(article, 'title')}</h3>
-                                     <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-3 mt-auto">
-                                         <div class="flex items-center"><span class="h-4 w-4 mr-1">${ICONS.user}</span> ${article.author}</div>
-                                         <span class="text-purple-600 hover:text-purple-700 font-medium">Baca →</span>
-                                     </div>
-                                 </div>
-                             </div>
-                        `).join('')}
-                        </div>
-                    </div>
-                </div>`;
-            }
-            
-            function renderBlogDetailPage(blogId) {
-                const article = DB.newsDatabase[blogId] || DB.newsDatabase['featured-1'];
-                const relatedArticles = Object.values(DB.newsDatabase).filter(a => a.id !== blogId).slice(0, 3);
-                 return `
-                <div class="bg-white py-12">
-                    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <button data-navigate="news" class="flex items-center text-sm text-gray-600 hover:text-purple-600 mb-6">
-                            <span class="h-4 w-4 mr-1">${ICONS.arrowLeft}</span> Kembali ke Berita
-                        </button>
-                        <article>
-                            <header class="mb-8">
-                                <span class="inline-block px-3 py-1 text-sm text-purple-700 bg-purple-100 rounded-full mb-3">${getTranslated(article, 'category')}</span>
-                                <h1 class="text-4xl text-gray-900 leading-tight mb-4 font-semibold">${getTranslated(article, 'title')}</h1>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <div class="flex items-center"><span class="h-4 w-4 mr-1.5">${ICONS.user}</span>${article.author}</div><span class="mx-3">|</span>
-                                    <div class="flex items-center"><span class="h-4 w-4 mr-1.5">${ICONS.calendar}</span>${article.date}</div><span class="mx-3">|</span>
-                                    <div class="flex items-center"><span class="h-4 w-4 mr-1.5">${ICONS.clock}</span>${getTranslated(article, 'readTime')}</div>
-                                </div>
-                            </header>
-                            <img src="${article.image}" alt="${getTranslated(article, 'title')}" class="w-full h-96 object-cover rounded-xl shadow-lg mb-8" onerror="imageFallback(this)" />
-                            <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">${getTranslated(article, 'content')}</div>
-                        </article>
-                    </div>
-                </div>`;
-            }
+  const featured = DB.news.featured;
+  const articles = DB.news.articles;
+  const relatedArticles = [
+    {
+      title: "Tren Industri Hijau di Asia Tenggara Mulai Menguat",
+      source: "Kompasiana",
+      logo: "https://assets-a2.kompasiana.com/items/logo/logo-17-th-kompasiana-web-mobile-header-1761108655.png?t=o&v=200&z=1761108655",
+      url: "https://www.kompasiana.com/",
+    },
+    {
+      title: "Digitalisasi Bisnis dan Dampaknya bagi UMKM di Indonesia",
+      source: "Tech in Asia",
+      logo: "https://miro.medium.com/v2/resize:fit:88/1*Ra88BZ-CSTovFS2ZSURBgg.png",
+      url: "https://www.techinasia.com/",
+    },
+    {
+      title: "Efisiensi Energi Lewat Otomasi Industri Modern",
+      source: "Medium",
+      logo: "https://miro.medium.com/v2/resize:fit:88/1*Ra88BZ-CSTovFS2ZSURBgg.png",
+      url: "https://medium.com/",
+    },
+  ];
+
+  return `
+ <div class="bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-10">
+      <h1 class="text-4xl text-gray-900 font-semibold">Berita & Wawasan</h1>
+
+      <!-- Garis ungu dekoratif di bawah judul -->
+      <div class="h-1 w-40 bg-purple-600 rounded-full mx-auto mt-3 mb-5"></div>
+
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Ikuti perkembangan terbaru dalam teknologi industri, inovasi keberlanjutan, dan berita perusahaan.
+      </p>
+    </div>
+
+
+        <div class="mb-6 text-left">
+        <h2 class="text-2xl font-semibold text-gray-900 border-l-4 border-purple-600 pl-3">
+          What's New? <span class="text-gray-500 text-base font-normal">/ Latest Article</span>
+        </h2>
+      </div>
+
+      <!-- Featured Article -->
+      <div class="mb-16 cursor-pointer group relative rounded-2xl overflow-hidden shadow-lg" 
+           data-navigate="blog-detail" data-id="${featured.id}">
+        <img src="${featured.image}" alt="${getTranslated(featured, 'title')}" 
+             class="w-full h-[460px] object-cover" onerror="imageFallback(this)">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+        <div class="absolute bottom-0 p-8 text-white">
+          <span class="inline-block px-3 py-1 text-sm text-purple-200 bg-purple-700/70 rounded-full mb-3">
+            ${getTranslated(featured, 'category')}
+          </span>
+          <h2 class="text-3xl md:text-5xl font-bold mb-3 group-hover:text-purple-300 transition-colors">
+            ${getTranslated(featured, 'title')}
+          </h2>
+          <p class="max-w-3xl text-gray-200 mb-3">${getTranslated(featured, 'excerpt')}</p>
+          <div class="flex flex-wrap items-center space-x-6 text-sm text-gray-300">
+            <span class="flex items-center">
+              <span class="inline-block w-4 h-4 mr-4">${ICONS.user}</span>${featured.author}
+            </span>
+            <span class="flex items-center">
+              <span class="inline-block w-4 h-4 mr-4">${ICONS.calendar}</span>${featured.date}
+            </span>
+            <span class="flex items-center">
+              <span class="inline-block w-4 h-4 mr-4">${ICONS.clock}</span>${getTranslated(featured, 'readTime')}
+            </span>
+          </div>
+        </div>
+      </div>
+
+              <div class="mb-6 text-left">
+        <h2 class="text-2xl font-semibold text-gray-900 border-l-4 border-purple-600 pl-3">
+          Released Articles <span class="text-gray-500 text-base font-normal">/ See More </span>
+        </h2>
+      </div>
+
+      <!-- Other Articles Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        ${articles.map(article => `
+          <div class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col group cursor-pointer" 
+               data-navigate="blog-detail" data-id="${article.id}">
+            <div class="p-4">
+              <img src="${article.image}" alt="${getTranslated(article, 'title')}" 
+                   class="w-full h-48 object-cover rounded-lg" onerror="imageFallback(this)">
+            </div>
+            <div class="p-4 pt-0 flex-grow flex flex-col">
+              <span class="inline-block px-2 py-1 text-xs text-green-700 bg-green-100 rounded-full mb-3 self-start">
+                ${getTranslated(article, 'category')}
+              </span>
+              <h3 class="text-lg text-gray-900 mb-3 flex-grow font-medium group-hover:text-purple-600">
+                ${getTranslated(article, 'title')}
+              </h3>
+              <div class="flex justify-between items-center text-sm text-gray-500 border-t pt-3 mt-auto">
+                <div class="flex items-center">
+                  <span class="inline-block w-4 h-4 mr-2">${ICONS.user}</span>${article.author}
+                </div>
+                <span class="text-purple-600 hover:text-purple-700 font-medium">Baca →</span>
+              </div>
+            </div>
+          </div>
+
+          
+        `).join('')}
+      </div>
+
+<!-- Wrapper besar -->
+<div class="bg-purple-50 border border-purple-100 rounded-2xl p-5 lg:p-6 mt-10">
+  <h3 class="text-xl font-semibold text-gray-900 mb-4 border-l-4 border-purple-600 pl-3">
+    Other Articles... <span class="text-gray-500 text-base font-normal"></span>
+  </h3>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    ${relatedArticles.map(article => `
+      <div class="relative group">
+        <a href="${article.url}" target="_blank"
+           class="flex items-center bg-white hover:bg-purple-50 border border-purple-100 rounded-lg px-3 py-3 transition h-[80px] shadow-sm">
+          <img src="${article.logo}" alt="${article.source}" class="w-7 h-7 object-contain rounded-sm flex-shrink-0 mr-2">
+          <div class="flex flex-col justify-center w-full overflow-hidden">
+            <span class="text-gray-900 text-xs md:text-sm font-medium leading-snug line-clamp-2">
+              ${article.title}
+            </span>
+            <span class="text-[11px] text-gray-600 mt-1">${article.source}</span>
+          </div>
+          <span class="text-purple-600 text-base ml-2 flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
+
+<div class="absolute left-full bottom-[-18px] -translate-x-[40%] ml-2 hidden group-hover:flex z-10 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-2 group-hover:translate-y-0">
+          <div class="bg-white border border-purple-200 shadow-lg rounded-lg px-3 py-2 text-xs text-gray-800 w-[220px]">
+            ${article.title}
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+</div>
+
+
+
+
+
+
+
+    </div>
+  </div>`;
+}
+
+
+                    
+                    function renderBlogDetailPage(blogId) {
+  const article = DB.newsDatabase[blogId] || DB.newsDatabase['featured-1'];
+  const relatedArticles = DB.news.articles
+    .filter(a => a.id !== blogId)
+    .slice(0, 5);
+
+  return `
+  <div class="bg-white py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Tombol kembali -->
+      <button data-navigate="news" 
+              class="flex items-center text-sm text-gray-600 hover:text-purple-600 mb-8 ml-4 transition">
+        <span class="h-4 w-4 mr-3 -mt-1.5">${ICONS.arrowLeft}</span>
+        Kembali ke Berita
+      </button>
+
+      <article>
+        <header class="mb-10 text-center">
+          <span class="inline-block px-3 py-1 text-sm text-purple-700 bg-purple-100 rounded-full mb-4">
+            ${getTranslated(article, 'category')}
+          </span>
+
+          <h1 class="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight mb-4">
+            ${getTranslated(article, 'title')}
+          </h1>
+
+          <!-- Garis ungu dekoratif -->
+          <div class="h-1 w-24 bg-purple-600 rounded-full mx-auto mb-6"></div>
+
+          <div class="flex flex-wrap justify-center items-center text-sm text-gray-500 space-x-4">
+            <div class="flex items-center space-x-1 mt-1">
+              <span class="h-4 w-4 -mt-2">${ICONS.user}</span>
+              <span class="pl-2">${article.author}</span>
+            </div>
+            <div class="flex items-center space-x-1 mt-1">
+              <span class="h-4 w-4 -mt-2">${ICONS.calendar}</span>
+              <span class="pl-2">${article.date}</span>
+            </div>
+            <div class="flex items-center space-x-1 mt-1">
+              <span class="h-4 w-4 -mt-2">${ICONS.clock}</span>
+              <span class="pl-2">${getTranslated(article, 'readTime')}</span>
+            </div>
+          </div>
+        </header>
+
+        <img src="${article.image}" 
+             alt="${getTranslated(article, 'title')}" 
+             class="w-full h-96 object-cover rounded-2xl shadow-lg mb-10" 
+             onerror="imageFallback(this)" />
+
+        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed mb-8">
+          ${getTranslated(article, 'content')}
+        </div>
+      </article>
+
+<section class="mt-16 border border-purple-100 rounded-2xl p-6 bg-purple-50">
+        <h3 class="text-l font-semibold text-gray-900 mb-4 border-l-4 border-purple-600 pl-3">
+          Related Articles...
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${relatedArticles.map(a => `
+            <div data-navigate="blog-detail" data-id="${a.id}" 
+                 class="flex items-center bg-white border border-purple-100 rounded-lg shadow-sm hover:shadow-md transition p-3 cursor-pointer">
+              
+              <!-- Gambar kecil -->
+              <img src="${a.image}" alt="${getTranslated(a, 'title')}" 
+                   class="w-16 h-16 object-cover rounded-lg flex-shrink-0 mr-3" onerror="imageFallback(this)">
+              
+              <!-- Judul & kategori di samping -->
+              <div class="flex flex-col">
+                <span class="inline-block text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full mb-1">
+                  ${getTranslated(a, 'category')}
+                </span>
+                <h4 class="text-gray-900 text-sm font-medium line-clamp-2 group-hover:text-purple-700">
+                  ${getTranslated(a, 'title')}
+                </h4>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+    </div>
+  </div>`;
+}
             
             function renderQuotePage() {
                  return `
